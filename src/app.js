@@ -6,9 +6,9 @@ db.connect();
 app.use(express.json());
 
 const busCompany = require('./routes/busCompanyRoutes');
-// const neighborhood = require('./routes/neighborhoodsRoutes');
+const neighborhood = require('./routes/neighborhoodsRoutes');
 
 app.use('/buses', busCompany);
-// app.use('/neighborhoods', neighborhood);
+app.use('/neighborhoods', neighborhood);
 
 module.exports = app;
