@@ -26,12 +26,13 @@ const createNeighborhood = async (req, res) => {
 const getAll = async (req, res) => {
     try {
     const neighborhood = await Neighborhood.find()
-    return res.status(200).json(neighb);
+    return res.status(200).json(neighborhood);
     } catch (err) {
         return res.status(500).json({ message: err.message})
     }
 }
 
 module.exports = {
-    createNeighborhood
+    createNeighborhood,
+    getAll
 }
