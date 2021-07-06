@@ -54,9 +54,26 @@ const createBusLine = async (req, res) => {
             res.status(500).json({ message: err.message})
         }
     }
+
+    const removeBusLine = async (req, res) => {
+
+        const findBusCompany = await CompanyBus.findById(req.params.id);
+        
+        if (findBusCompany== undefined) {
+            return res.status(404).json({message: 'Transporte não encontrado'})
+        }    
+    
+       try{
+           await findBusCompany.remove()
+            res.status(200).send({ message: "Deletado com sucesso!"})
+       } catch(err) {
+           res.status(500).json({ message: err.message})
+       }
+    }
     
 module.exports = {
     createBusLine,
     getAll,
-    updateBusLine
+    updateBusLine,
+    removeBusLine
 }

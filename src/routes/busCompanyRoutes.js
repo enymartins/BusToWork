@@ -5,5 +5,6 @@ const controller = require('../controllers/busCompanyController');
 router.post('/create', controller.createBusLine);
 router.get('/list', controller.getAll);
 router.post('/:id', controller.updateBusLine);
+router.delete('/:id', controller.removeBusLine);
 
 module.exports = router;
