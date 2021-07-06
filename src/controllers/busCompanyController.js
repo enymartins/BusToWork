@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const CompanyBus = require('../models/busCompany');
 
-const createBusLines = async (req, res) => {
+const createBusLine = async (req, res) => {
     const busLines = new CompanyBus ({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -32,7 +32,31 @@ const createBusLines = async (req, res) => {
             return res.status(500).json({ message: err.message})
         }
     }
+
+    const updateBusLine = async (req,res) => {
+        const findBusCompany = await CompanyBus.findById(req.params.id);
+        
+        if (findBusCompany == undefined) {
+            return res.status(404).json({message: 'Transporte não encontrado'})
+        }  
+    
+        const { name, driver_name, driver_phone, whatsapp_group } = req.body;
+
+        findBusCompany.name = name || findBusCompany.name
+        findBusCompany.driver_name = driver_name || findBusCompany.driver_name
+        findBusCompany.driver_phone = driver_phone || findBusCompany.driver_phone
+        findBusCompany.whatsapp_group = whatsapp_group || findBusCompany.whatsapp_group
+
+        try {
+            const updatedBusCompany = await findBusCompany.save()
+            res.status(200).send(updatedBusCompany)
+        } catch(err) {
+            res.status(500).json({ message: err.message})
+        }
+    }
+    
 module.exports = {
-    createBusLines,
-    getAll
+    createBusLine,
+    getAll,
+    updateBusLine
 }
