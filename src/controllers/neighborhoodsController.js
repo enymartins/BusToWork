@@ -25,31 +25,45 @@ const createNeighborhood = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-    const neighborhood = await Neighborhood.find().populate('bus_line');
-    return res.status(200).json(neighborhood);
+        const neighborhood = await Neighborhood.find().populate('bus_line');
+        return res.status(200).json(neighborhood);
     } catch (err) {
-        return res.status(500).json({ message: err.message})
+        return res.status(500).json({ message: err.message })
     }
 }
 
-const updateNeighborhood = async (req,res) => {
+
+const getByNeighborhood = async (req, res) => {
+    const { search } = req.query
+    try {
+        const neighborhoods = await Neighborhood.findOne({ name: search }).populate('bus_line');
+        if(neighborhoods == undefined){
+            return res.status(404).json({ message: 'Bairro não encontrado!' })
+        }
+        return res.status(200).json(neighborhoods);
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}
+
+const updateNeighborhood = async (req, res) => {
     const findNeighborhood = await Neighborhood.findById(req.params.id);
-    
+
     if (findNeighborhood == undefined) {
-        return res.status(404).json({message: 'Bairro não encontrado'})
-    } 
+        return res.status(404).json({ message: 'Bairro não encontrado' })
+    }
 
     const { name, city_area, bus_line } = req.body;
 
-        findNeighborhood.name = name || findNeighborhood.name
-        findNeighborhood.city_area = city_area || findNeighborhood.city_area
-        findNeighborhood.bus_line = bus_line || findNeighborhood.bus_line
+    findNeighborhood.name = name || findNeighborhood.name
+    findNeighborhood.city_area = city_area || findNeighborhood.city_area
+    findNeighborhood.bus_line = bus_line || findNeighborhood.bus_line
 
     try {
         const updatedNeighborhood = await findNeighborhood.save()
         res.status(200).send(updatedNeighborhood);
-    } catch(err) {
-        res.status(500).json({ message: err.message});
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 }
 
@@ -57,23 +71,24 @@ const updateNeighborhood = async (req,res) => {
 const removeNeighborhood = async (req, res) => {
 
     const findNeighborhood = await Neighborhood.findById(req.params.id);
-    
-    if (findNeighborhood== undefined) {
-        return res.status(404).json({message: 'Bairro não encontrado'})
-    }    
 
-   try{
-       await findNeighborhood.remove()
-        res.status(200).send({ message: "Deletado com sucesso!"})
-   } catch(err) {
-       res.status(500).json({ message: err.message})
-   }
+    if (findNeighborhood == undefined) {
+        return res.status(404).json({ message: 'Bairro não encontrado' })
+    }
+
+    try {
+        await findNeighborhood.remove()
+        res.status(200).send({ message: "Deletado com sucesso!" })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
 }
 
 
 module.exports = {
     createNeighborhood,
     getAll,
+    getByNeighborhood,
     updateNeighborhood,
     removeNeighborhood
 }
