@@ -36,7 +36,7 @@ const getAll = async (req, res) => {
 const getByNeighborhood = async (req, res) => {
     const { search } = req.query
     try {
-        const neighborhoods = await Neighborhood.findOne({ name: search }).populate('bus_line');
+        const neighborhoods = await Neighborhood.find({ name: {$regex: `.*${search}.*`}}).populate('bus_line');
         if(neighborhoods == undefined){
             return res.status(404).json({ message: 'Bairro não encontrado!' })
         }
