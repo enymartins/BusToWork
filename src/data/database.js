@@ -7,7 +7,10 @@ const connect = () => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     }).then(console.log('Database connected!'))
-        .catch(err => console.error);
+        .catch((error) => {
+            console.log("Algo deu errado!")
+            console.error(error)
+        })
 }
 
 module.exports = { connect }
